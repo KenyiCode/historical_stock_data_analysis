@@ -1,8 +1,18 @@
 import config, requests, json
 
-minute_bars_url = config.BARS_URL + "/5Min?symbols=MSFT&limit=1000"
+# Grabbing data from csv file
+holdings = open('data/qqq.csv').readlines()
 
-days_bar_url = "{}/day?symbols={}&limit=1000".format(config.BARS_URL, 'AAPL,MSFT')
+# Isolating stock tickers from holdings
+symbols = [holding.split(',')[2].strip() for holding in holdings][1:]
+
+# Convert to comma-separated list
+symbols = ','.join(symbols)
+
+print(symbols)
+
+# Use alpaca api to retrieve stock data with symbols list
+days_bar_url = "{}/day?symbols={}&limit=1000".format(config.BARS_URL, symbols)
 
 r = requests.get(days_bar_url, headers=config.HEADERS)
 
